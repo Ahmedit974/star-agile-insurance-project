@@ -1,0 +1,35 @@
+ pipeline {
+ agent any
+ tools {
+ maven'mymaven'
+ }
+ stages {
+ stage('Clone Repo') {
+ steps {
+ git 'https://github.com/CSPPallavi/star-agile
+insurance-project.git'
+ }
+ }
+ 22
+stage('Test Code') {
+ steps {
+ sh 'mvntest'
+ }
+ }
+ stage('Build Code') {
+ steps {
+ sh 'mvnpackage'
+ }
+ }
+ stage('Build Image') {
+ steps {
+ sh 'docker build-t banking_finance:$BUILD_NUMBER .'
+ }
+ }
+ stage('Push the Image to DockerHub') {
+ steps {
+ withCredentials([string(credentialsId:
+ 'DOCKER_HUB_PASWD', variable: 'DOCKER_HUB_PASWD')]) {
+ sh 'docker login-u tsak43g-p
+ ${DOCKER_HUB_PASWD}'
+ }
